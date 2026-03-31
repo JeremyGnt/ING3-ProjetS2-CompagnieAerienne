@@ -1,0 +1,88 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+enum StatutReservation {
+  ACTIVE
+  ANNULEE
+}
+
+class Avion {
+  - id : String
+  - modele : String
+  - capacite : int
+  - compagnie : String
+  - anneeService : int
+  + afficherDetails() : String
+}
+
+class Vol {
+  - numeroVol : String
+  - villeDepart : String
+  - villeDestination : String
+  - dateDepart : LocalDateTime
+  - avion : Avion
+  - placesDisponibles : int
+  - siegesOccupes : Set<String>
+  + reserverPlace(numeroSiege : String) : void
+  + libererPlace(numeroSiege : String) : void
+  + genererNumeroSiegeAutomatique() : String
+  + getTauxRemplissage() : double
+  + afficherDetails() : String
+}
+
+class Passager {
+  - id : String
+  - nom : String
+  - prenom : String
+  - numeroPasseport : String
+  - nationalite : String
+  + getNomComplet() : String
+  + afficherDetails() : String
+}
+
+class Reservation {
+  - idReservation : String
+  - passager : Passager
+  - vol : Vol
+  - dateReservation : LocalDateTime
+  - numeroSiege : String
+  - statut : StatutReservation
+  + annulerReservation() : void
+  + afficherReservation() : String
+}
+
+class CompagnieAerienne {
+  - listeAvions : ArrayList<Avion>
+  - listeVols : ArrayList<Vol>
+  - listePassagers : ArrayList<Passager>
+  - listeReservations : ArrayList<Reservation>
+  + ajouterAvion(avion : Avion) : void
+  + ajouterVol(...) : void
+  + ajouterPassager(passager : Passager) : void
+  + reserverVol(...) : Reservation
+  + annulerReservation(idReservation : String) : void
+}
+
+class MenuUtils {
+  {static} + lireChoixMenu(...) : int
+  {static} + lireChaineNonVide(...) : String
+  {static} + lireEntier(...) : int
+  {static} + lireDateHeure(...) : LocalDateTime
+}
+
+class Main {
+  {static} + main(args : String[]) : void
+}
+
+Vol --> Avion : utilise
+Reservation --> Passager : concerne
+Reservation --> Vol : concerne
+CompagnieAerienne "1" o-- "*" Avion
+CompagnieAerienne "1" o-- "*" Vol
+CompagnieAerienne "1" o-- "*" Passager
+CompagnieAerienne "1" o-- "*" Reservation
+Main --> CompagnieAerienne
+Main --> MenuUtils
+Reservation --> StatutReservation
+@enduml
+
