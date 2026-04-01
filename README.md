@@ -1,96 +1,118 @@
-# Airline Management
+# ING3-ProjetS2-CompagnieAerienne
 
-Projet Java console de gestion d'une compagnie aérienne, conforme au cahier des charges POO : gestion des avions, vols, passagers et réservations, avec recherche, tri, statistiques, historique et génération automatique des sièges.
+Projet scolaire de groupe réalisé à l’**ECE Lyon**, autour du développement d’une application de gestion d’une compagnie aérienne.
 
-## Structure du projet
+> 🎓 Projet académique 
+> 👥 Travail réalisé en équipe
+
+---
+
+## 🚀 Présentation
+
+**Ce projet vise à modéliser et implémenter les fonctionnalités essentielles d’un système de compagnie aérienne : gestion des vols, des réservations, des passagers et du suivi opérationnel.**
+
+**L’objectif est de produire une application cohérente, maintenable et exploitable, en respectant les contraintes d’un projet d’ingénierie logiciel en groupe.**
+
+---
+
+## 🧠 Objectifs pédagogiques
+
+- Concevoir une solution logicielle à partir d’un besoin métier réel
+- Développer en équipe avec une organisation claire (répartition des tâches)
+- Appliquer des bonnes pratiques de code et de documentation
+- Utiliser Git/GitHub pour la collaboration et l’intégration
+- Livrer un projet fonctionnel dans un délai défini
+
+---
+
+## ✨ Fonctionnalités principales
+
+- Gestion des vols (création, consultation, mise à jour)
+- Gestion des passagers
+- Gestion des réservations
+- Suivi des informations de vol
+- Navigation structurée entre les différentes fonctionnalités métier
+
+
+---
+
+## 🏗️ Structure du projet (exemple)
 
 ```text
-ING3-ProjetS2-CompagnieAerienne
-├── docs
-│   ├── rapport.md
-│   └── uml.puml
-├── pom.xml
-├── src
-│   ├── main
-│   │   └── java
-│   │       ├── app
-│   │       │   └── Main.java
-│   │       ├── model
-│   │       │   ├── Avion.java
-│   │       │   ├── Passager.java
-│   │       │   ├── Reservation.java
-│   │       │   ├── StatutReservation.java
-│   │       │   └── Vol.java
-│   │       ├── service
-│   │       │   └── CompagnieAerienne.java
-│   │       └── utils
-│   │           └── MenuUtils.java
-│   └── test
-│       └── java
-│           └── app
-│               └── SmokeTest.java
+ING3-ProjetS2-CompagnieAerienne/
+├─ src/                 # Code source principal
+├─ include/             # Fichiers d’interface / headers
+├─ data/                # Données (si présentes)
+├─ docs/                # Documentation
+├─ tests/               # Tests (si présents)
+└─ README.md
 ```
 
-## Fonctionnalités implémentées
+---
 
-- gestion complète des avions : ajout, modification, suppression, affichage, recherche
-- gestion complète des vols : ajout, modification, suppression, affichage, recherche
-- gestion complète des passagers : ajout, modification, suppression, affichage, recherche
-- gestion complète des réservations : réservation, annulation, affichage des passagers d'un vol, vols d'un passager, historique
-- protections métier : doublons d'identifiants, doublons de passeport, double réservation, vol complet, incohérences de capacité
-- fonctionnalités avancées :
-  - tri des vols par destination
-  - tri des vols par date
-  - tri des passagers par nom
-  - recherche multicritère des vols par destination et date
-  - calcul du taux de remplissage d'un vol
-  - statistiques des vols les plus fréquentés
-  - historique des réservations d'un passager
-  - génération automatique des numéros de siège
+## ⚙️ Prérequis
 
-## Exécution dans IntelliJ
+- Outils nécessaires pour compiler/exécuter le projet
+- Dépendances éventuelles
+- (Optionnel) base de données ou fichiers de configuration
 
-1. Ouvrir le dossier du projet.
-2. Vérifier qu'un JDK 17 est configuré.
-3. Lancer la classe `app.Main`.
+---
 
-## Compilation et exécution en ligne de commande
+## 🚀 Installation & exécution
 
-### Compiler
+### 1) Cloner le dépôt
 
-```powershell
-Set-Location "C:\Users\User\IdeaProjects\ING3-ProjetS2-CompagnieAerienne"
-$sources = Get-ChildItem -Path "src\main\java" -Recurse -Filter *.java | Select-Object -ExpandProperty FullName
-if (Test-Path "out") { Remove-Item -Recurse -Force "out" }
-New-Item -ItemType Directory -Path "out" | Out-Null
-javac -encoding UTF-8 -d "out" $sources
+```bash
+git clone https://github.com/JeremyGnt/ING3-ProjetS2-CompagnieAerienne.git
+cd ING3-ProjetS2-CompagnieAerienne
 ```
 
-### Lancer l'application
+### 2) Se placer sur le commit de référence
 
-```powershell
-Set-Location "C:\Users\User\IdeaProjects\ING3-ProjetS2-CompagnieAerienne"
-java -cp "out" app.Main
+```bash
+git checkout e68d1a9e0b2e8424e8f1d3ea096f42ee144edee5
 ```
 
-### Compiler et lancer le test de fumée
+### 3) Compiler / lancer le projet
 
-```powershell
-Set-Location "C:\Users\User\IdeaProjects\ING3-ProjetS2-CompagnieAerienne"
-$mainSources = Get-ChildItem -Path "src\main\java" -Recurse -Filter *.java | Select-Object -ExpandProperty FullName
-$testSources = Get-ChildItem -Path "src\test\java" -Recurse -Filter *.java | Select-Object -ExpandProperty FullName
-if (Test-Path "out") { Remove-Item -Recurse -Force "out" }
-if (Test-Path "out-test") { Remove-Item -Recurse -Force "out-test" }
-New-Item -ItemType Directory -Path "out" | Out-Null
-New-Item -ItemType Directory -Path "out-test" | Out-Null
-javac -encoding UTF-8 -d "out" $mainSources
-javac -encoding UTF-8 -cp "out" -d "out-test" $testSources
-java -cp "out;out-test" app.SmokeTest
+```bash
+# Commandes à adapter selon votre stack
+# Exemple C/CMake :
+# cmake -S . -B build
+# cmake --build build
+# ./build/nom_du_binaire
 ```
 
-## Remarques
+---
 
-- L'application charge automatiquement quelques données de démonstration au démarrage pour faciliter la présentation.
-- Le stockage est réalisé en mémoire avec `ArrayList`, conformément au cahier des charges.
-- Les règles métier sont centralisées dans `service/CompagnieAerienne.java`.
+## ✅ Tests (si disponibles)
 
+```bash
+# À adapter
+# ctest --test-dir build --output-on-failure
+```
+
+---
+
+## 👥 Organisation de groupe
+
+Ce projet a été mené en équipe, avec :
+
+- répartition des responsabilités par modules,
+- intégration progressive des contributions,
+- validation collective des fonctionnalités livrées.
+
+---
+
+
+## 🎓 Cadre académique & propriété
+
+Projet réalisé dans le cadre d’un projet scolaire avec l’**ECE Lyon**.  
+Les droits et modalités d’utilisation sont soumis aux règles pédagogiques applicables à ce projet.
+
+---
+
+## 👤 Auteur
+
+- **Jeremy Gonnet**
+- GitHub : [https://github.com/JeremyGnt](https://github.com/JeremyGnt)
