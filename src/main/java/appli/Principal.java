@@ -9,17 +9,10 @@ import utilitaires.UtilitairesMenu;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Principal {
-    private static final DateTimeFormatter DATE_HEURE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
     public static void main(String[] args) {
         CompagnieAerienne compagnieAerienne = new CompagnieAerienne();
         initialiserDonneesDemo(compagnieAerienne);
@@ -38,8 +31,7 @@ public class Principal {
                     "Gestion des passagers",
                     "Gestion des réservations",
                     "Affichage et consultation",
-                    "Recherche et tri",
-                    "Statistiques"
+                    "Fonctionnalités avancées"
             ));
 
             switch (choix) {
@@ -48,8 +40,7 @@ public class Principal {
                 case 3 -> menuPassagers(scanner, compagnieAerienne);
                 case 4 -> menuReservations(scanner, compagnieAerienne);
                 case 5 -> menuAffichage(scanner, compagnieAerienne);
-                case 6 -> menuRechercheTri(scanner, compagnieAerienne);
-                case 7 -> menuStatistiques(scanner, compagnieAerienne);
+                case 6 -> menuFonctionnalitesAvancees(scanner, compagnieAerienne);
                 case 0 -> quitter = UtilitairesMenu.demanderConfirmation(scanner, "Voulez-vous vraiment quitter l'application ?");
                 default -> UtilitairesMenu.afficherErreur("Choix invalide.");
             }
@@ -111,8 +102,7 @@ public class Principal {
                     "Modifier un passager",
                     "Supprimer un passager",
                     "Afficher la liste des passagers",
-                    "Rechercher un passager",
-                    "Trier les passagers par nom"
+                    "Rechercher un passager"
             ));
             switch (choix) {
                 case 1 -> executerAction(scanner, () -> ajouterPassager(scanner, compagnieAerienne));
@@ -120,7 +110,6 @@ public class Principal {
                 case 3 -> executerAction(scanner, () -> supprimerPassager(scanner, compagnieAerienne));
                 case 4 -> executerAction(scanner, () -> afficherPassagers(compagnieAerienne.getListePassagers(), "Aucun passager enregistré."));
                 case 5 -> executerAction(scanner, () -> rechercherPassager(scanner, compagnieAerienne));
-                case 6 -> executerAction(scanner, () -> afficherPassagers(compagnieAerienne.trierPassagersParNom(), "Aucun passager enregistré."));
                 case 0 -> retour = true;
                 default -> UtilitairesMenu.afficherErreur("Choix invalide.");
             }
@@ -135,8 +124,7 @@ public class Principal {
                     "Annuler une réservation",
                     "Afficher les passagers d'un vol",
                     "Afficher les vols réservés par un passager",
-                    "Afficher les réservations en cours",
-                    "Afficher l'historique des réservations d'un passager"
+                    "Afficher les réservations en cours"
             ));
             switch (choix) {
                 case 1 -> executerAction(scanner, () -> reserverVol(scanner, compagnieAerienne));
@@ -144,7 +132,6 @@ public class Principal {
                 case 3 -> executerAction(scanner, () -> afficherPassagersDunVol(scanner, compagnieAerienne));
                 case 4 -> executerAction(scanner, () -> afficherVolsDunPassager(scanner, compagnieAerienne));
                 case 5 -> executerAction(scanner, () -> afficherReservations(compagnieAerienne.afficherReservationsEnCours(), "Aucune réservation active."));
-                case 6 -> executerAction(scanner, () -> afficherHistoriqueReservations(scanner, compagnieAerienne));
                 case 0 -> retour = true;
                 default -> UtilitairesMenu.afficherErreur("Choix invalide.");
             }
@@ -173,42 +160,20 @@ public class Principal {
         }
     }
 
-    private static void menuRechercheTri(Scanner scanner, CompagnieAerienne compagnieAerienne) {
+    private static void menuFonctionnalitesAvancees(Scanner scanner, CompagnieAerienne compagnieAerienne) {
         boolean retour = false;
         while (!retour) {
-            int choix = UtilitairesMenu.lireChoixMenu(scanner, "RECHERCHE ET TRI", List.of(
+            int choix = UtilitairesMenu.lireChoixMenu(scanner, "FONCTIONNALITÉS AVANCÉES", List.of(
                     "Recherche multicritère des vols (destination + date)",
                     "Trier les vols par destination",
                     "Trier les vols par date",
-                    "Trier les passagers par nom",
-                    "Rechercher un avion",
-                    "Rechercher un passager"
+                    "Calculer le taux de remplissage d'un vol"
             ));
             switch (choix) {
                 case 1 -> executerAction(scanner, () -> rechercheMulticritereVol(scanner, compagnieAerienne));
                 case 2 -> executerAction(scanner, () -> afficherVols(compagnieAerienne.trierVolsParDestination(), "Aucun vol enregistré."));
                 case 3 -> executerAction(scanner, () -> afficherVols(compagnieAerienne.trierVolsParDate(), "Aucun vol enregistré."));
-                case 4 -> executerAction(scanner, () -> afficherPassagers(compagnieAerienne.trierPassagersParNom(), "Aucun passager enregistré."));
-                case 5 -> executerAction(scanner, () -> rechercherAvion(scanner, compagnieAerienne));
-                case 6 -> executerAction(scanner, () -> rechercherPassager(scanner, compagnieAerienne));
-                case 0 -> retour = true;
-                default -> UtilitairesMenu.afficherErreur("Choix invalide.");
-            }
-        }
-    }
-
-    private static void menuStatistiques(Scanner scanner, CompagnieAerienne compagnieAerienne) {
-        boolean retour = false;
-        while (!retour) {
-            int choix = UtilitairesMenu.lireChoixMenu(scanner, "STATISTIQUES", List.of(
-                    "Calculer le taux de remplissage d'un vol",
-                    "Afficher les vols les plus fréquentés",
-                    "Afficher un tableau de bord global"
-            ));
-            switch (choix) {
-                case 1 -> executerAction(scanner, () -> afficherTauxRemplissage(scanner, compagnieAerienne));
-                case 2 -> executerAction(scanner, () -> afficherVolsLesPlusFrequentes(compagnieAerienne));
-                case 3 -> executerAction(scanner, () -> afficherTableauDeBord(compagnieAerienne));
+                case 4 -> executerAction(scanner, () -> afficherTauxRemplissage(scanner, compagnieAerienne));
                 case 0 -> retour = true;
                 default -> UtilitairesMenu.afficherErreur("Choix invalide.");
             }
@@ -405,13 +370,16 @@ public class Principal {
         verifierPresence(compagnieAerienne.contientVols(), "Ajoutez d'abord un vol.");
 
         UtilitairesMenu.afficherTitre("RÉSERVER UN BILLET");
-        afficherPassagers(compagnieAerienne.trierPassagersParNom(), "Aucun passager enregistré.");
+        afficherPassagers(compagnieAerienne.getListePassagers(), "Aucun passager enregistré.");
         String idPassager = UtilitairesMenu.lireChaineNonVide(scanner, "Identifiant du passager : ");
         afficherVols(compagnieAerienne.afficherVolsDisponibles(), "Aucun vol disponible.");
         String numeroVol = UtilitairesMenu.lireChaineNonVide(scanner, "Numéro du vol : ");
 
         String numeroSiege = "";
-        if (UtilitairesMenu.demanderConfirmation(scanner, "Voulez-vous choisir manuellement un siège ?")) {
+        boolean choixManuel = UtilitairesMenu.demanderConfirmation(scanner, "Voulez-vous choisir manuellement un siège ?");
+        if (!choixManuel) {
+            UtilitairesMenu.afficherInformation("Le prochain siège disponible sera attribué automatiquement.");
+        } else {
             numeroSiege = UtilitairesMenu.lireChaineNonVide(scanner, "Numéro du siège (exemple 1A) : ");
         }
 
@@ -445,14 +413,6 @@ public class Principal {
         afficherVols(vols, "Aucun vol réservé pour ce passager.");
     }
 
-    private static void afficherHistoriqueReservations(Scanner scanner, CompagnieAerienne compagnieAerienne) {
-        verifierPresence(compagnieAerienne.contientPassagers(), "Aucun passager enregistré.");
-        String idPassager = UtilitairesMenu.lireChaineNonVide(scanner, "Identifiant du passager : ");
-        List<Reservation> historique = compagnieAerienne.afficherHistoriqueReservationsPassager(idPassager);
-        UtilitairesMenu.afficherTitre("HISTORIQUE DES RÉSERVATIONS DU PASSAGER " + idPassager.toUpperCase());
-        afficherReservations(historique, "Aucune réservation trouvée pour ce passager.");
-    }
-
     private static void rechercheMulticritereVol(Scanner scanner, CompagnieAerienne compagnieAerienne) {
         verifierPresence(compagnieAerienne.contientVols(), "Aucun vol enregistré.");
         String destination = UtilitairesMenu.lireChaineNonVide(scanner, "Destination recherchée : ");
@@ -467,35 +427,6 @@ public class Principal {
         String numeroVol = UtilitairesMenu.lireChaineNonVide(scanner, "Numéro du vol : ");
         double taux = compagnieAerienne.calculerTauxRemplissage(numeroVol);
         UtilitairesMenu.afficherInformation(String.format("Taux de remplissage du vol %s : %.2f%%", numeroVol.toUpperCase(), taux));
-    }
-
-    private static void afficherVolsLesPlusFrequentes(CompagnieAerienne compagnieAerienne) {
-        Map<Vol, Long> statistiques = compagnieAerienne.statistiquesVolsLesPlusFrequentes();
-        UtilitairesMenu.afficherTitre("VOLS LES PLUS FRÉQUENTÉS");
-        if (statistiques.isEmpty()) {
-            UtilitairesMenu.afficherInformation("Aucune réservation active pour établir des statistiques.");
-            return;
-        }
-        int rang = 1;
-        for (Map.Entry<Vol, Long> entree : statistiques.entrySet()) {
-            System.out.println(rang++ + ". " + entree.getKey().afficherDetails() + " | réservations actives=" + entree.getValue());
-        }
-    }
-
-    private static void afficherTableauDeBord(CompagnieAerienne compagnieAerienne) {
-        UtilitairesMenu.afficherTitre("TABLEAU DE BORD GLOBAL");
-        System.out.println("Nombre d'avions : " + compagnieAerienne.getListeAvions().size());
-        System.out.println("Nombre de vols : " + compagnieAerienne.getListeVols().size());
-        System.out.println("Nombre de passagers : " + compagnieAerienne.getListePassagers().size());
-        System.out.println("Réservations actives : " + compagnieAerienne.compterReservationsActives());
-        System.out.println("Vols disponibles : " + compagnieAerienne.afficherVolsDisponibles().size());
-
-        List<Vol> volsTries = new ArrayList<>(compagnieAerienne.getListeVols());
-        volsTries.sort(Comparator.comparing(Vol::getDateDepart));
-        if (!volsTries.isEmpty()) {
-            Vol prochainVol = volsTries.get(0);
-            System.out.println("Prochain vol : " + prochainVol.getNumeroVol() + " le " + prochainVol.getDateDepart().format(DATE_HEURE_FORMAT));
-        }
     }
 
     private static void afficherVols(List<Vol> vols, String messageVide) {

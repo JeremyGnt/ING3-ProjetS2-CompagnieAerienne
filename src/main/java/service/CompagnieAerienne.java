@@ -10,9 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -235,17 +233,14 @@ public class CompagnieAerienne {
                 .collect(Collectors.toList());
     }
 
-    public List<Passager> trierPassagersParNom() {
-        return listePassagers.stream()
-                .sorted(Comparator.comparing(Passager::getNom).thenComparing(Passager::getPrenom).thenComparing(Passager::getId))
-                .collect(Collectors.toList());
-    }
-
     public Reservation reserverVol(String idPassager, String numeroVol, String numeroSiege) {
         Passager passager = obtenirPassagerParId(idPassager);
         Vol vol = obtenirVolParNumero(numeroVol);
         if (vol.getDateDepart().isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("Impossible de réserver un vol dont la date de départ est déjà passée.");
+        }
+        if (vol.estComplet()) {
+            throw new IllegalStateException("Le vol est complet.");
         }
         boolean reservationExistante = listeReservations.stream()
                 .anyMatch(reservation -> reservation.estActive()
@@ -299,14 +294,6 @@ public class CompagnieAerienne {
                 .collect(Collectors.toList());
     }
 
-    public List<Reservation> afficherHistoriqueReservationsPassager(String idPassager) {
-        Passager passager = obtenirPassagerParId(idPassager);
-        return listeReservations.stream()
-                .filter(reservation -> reservation.getPassager().getId().equalsIgnoreCase(passager.getId()))
-                .sorted(Comparator.comparing(Reservation::getDateReservation).reversed())
-                .collect(Collectors.toList());
-    }
-
     public List<Vol> afficherVolsDisponibles() {
         return listeVols.stream()
                 .filter(vol -> !vol.estComplet() && vol.getDateDepart().isAfter(LocalDateTime.now()))
@@ -323,22 +310,6 @@ public class CompagnieAerienne {
 
     public double calculerTauxRemplissage(String numeroVol) {
         return obtenirVolParNumero(numeroVol).getTauxRemplissage();
-    }
-
-    public Map<Vol, Long> statistiquesVolsLesPlusFrequentes() {
-        return listeReservations.stream()
-                .filter(Reservation::estActive)
-                .collect(Collectors.groupingBy(Reservation::getVol, Collectors.counting()))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.<Vol, Long>comparingByValue().reversed()
-                        .thenComparing(entree -> entree.getKey().getDateDepart()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (valeur1, valeur2) -> valeur1,
-                        LinkedHashMap::new
-                ));
     }
 
     public long compterReservationsActivesPourVol(String numeroVol) {
