@@ -9,17 +9,13 @@ import utilitaires.UtilitairesMenu;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
-    private static final DateTimeFormatter FORMAT_DATE_DEMO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     public static void main(String[] args) {
         CompagnieAerienne compagnieAerienne = new CompagnieAerienne();
-        List<String> guideDemonstration = initialiserDonneesDemo(compagnieAerienne);
-        afficherGuideDemonstration(guideDemonstration);
+        initialiserDonneesDemo(compagnieAerienne);
 
         try (Scanner scanner = new Scanner(System.in)) {
             lancerApplication(scanner, compagnieAerienne);
@@ -463,7 +459,7 @@ public class Principal {
         UtilitairesMenu.pause(scanner);
     }
 
-    private static List<String> initialiserDonneesDemo(CompagnieAerienne compagnieAerienne) {
+    private static void initialiserDonneesDemo(CompagnieAerienne compagnieAerienne) {
         try {
             compagnieAerienne.ajouterAvion(new Avion("AV-100", "Airbus A320", 180, "Air France", 2018));
             compagnieAerienne.ajouterAvion(new Avion("AV-200", "Boeing 737", 160, "Transavia", 2019));
@@ -490,36 +486,15 @@ public class Principal {
             compagnieAerienne.ajouterVol("AP404", "Bordeaux", "Nice", dateNice, "AV-300");
             compagnieAerienne.ajouterVol("ML510", "Lille", "Dublin", dateDublin, "AV-100");
 
-            Reservation reservationAliceRome = compagnieAerienne.reserverVol("P-001", "AF101", "");
-            Reservation reservationAliceMadrid = compagnieAerienne.reserverVol("P-001", "TV220", "3C");
-            Reservation reservationLouisRome = compagnieAerienne.reserverVol("P-002", "AF101", "2A");
-            Reservation reservationElenaMadrid = compagnieAerienne.reserverVol("P-003", "TV220", "2B");
-            Reservation reservationAmadouRome = compagnieAerienne.reserverVol("P-004", "AF145", "4D");
-            Reservation reservationSaraBerlin = compagnieAerienne.reserverVol("P-005", "RW330", "1C");
-
-            return List.of(
-                    "Passager P-001 (Alice Dupont) : 2 réservations actives sur AF101 et TV220.",
-                    "Vol AF101 : déjà réservé par P-001 et P-002.",
-                    "Vol TV220 : déjà réservé par P-001 et P-003.",
-                    "Recherche multicritère prête : destination Rome, date " + dateRome.toLocalDate().format(FORMAT_DATE_DEMO) + ".",
-                    "Réserver en direct : utiliser P-006 (Marco Rossi) sur AP404 ou ML510.",
-                    "Annuler en direct : utiliser " + reservationAliceMadrid.getIdReservation() + ", "
-                            + reservationLouisRome.getIdReservation() + ", "
-                            + reservationElenaMadrid.getIdReservation() + ", "
-                            + reservationAmadouRome.getIdReservation() + " ou "
-                            + reservationSaraBerlin.getIdReservation() + ".",
-                    "Siège auto déjà attribué : " + reservationAliceRome.getIdReservation() + " pour P-001 sur AF101."
-            );
+            compagnieAerienne.reserverVol("P-001", "AF101", "");
+            compagnieAerienne.reserverVol("P-001", "TV220", "3C");
+            compagnieAerienne.reserverVol("P-002", "AF101", "2A");
+            compagnieAerienne.reserverVol("P-003", "TV220", "2B");
+            compagnieAerienne.reserverVol("P-004", "AF145", "4D");
+            compagnieAerienne.reserverVol("P-005", "RW330", "1C");
         } catch (RuntimeException exception) {
             throw new IllegalStateException("Erreur lors de l'initialisation des données de démonstration : " + exception.getMessage(), exception);
         }
-    }
-
-    private static void afficherGuideDemonstration(List<String> guideDemonstration) {
-        UtilitairesMenu.afficherTitre("DONNÉES DE DÉMONSTRATION CHARGÉES");
-        UtilitairesMenu.afficherInformation("Le projet démarre avec un scénario prêt pour la soutenance :");
-        UtilitairesMenu.afficherListe(guideDemonstration, "Aucune donnée de démonstration chargée.");
-        System.out.println();
     }
 
     @FunctionalInterface
